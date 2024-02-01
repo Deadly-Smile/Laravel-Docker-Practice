@@ -14,3 +14,7 @@ composer-update:
 data:
 	docker exec laravel-docker bash -c "php artisan migrate"
 	docker exec laravel-docker bash -c "php artisan db:seed"
+extra:
+	cd laravel-app
+	sudo chmod o+w ./storage/ -R
+	sudo chown www-data:www-data -R ./storage
