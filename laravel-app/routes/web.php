@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Point;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// this gives 419 error messages
+// Route::put('/p1', function (Request $request) {
+//     Point::Create([
+//         'X' => $request['x'],
+//         'Y' => $request['y'],
+//     ]);
+//     return response()->noContent(201);
+// });

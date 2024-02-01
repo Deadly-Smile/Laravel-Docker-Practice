@@ -1,11 +1,11 @@
-# Laravel-Docker-Practice
+# BOLBONA
 
-Learing docker
+## How to setup
 
-## Goto the directory
+Run this command on bash
 
-```
-docker exec -it laravel-docker bash
+```bash
+make setup
 ```
 
 ## Tutorial
