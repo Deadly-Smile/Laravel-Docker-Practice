@@ -20,15 +20,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/books', function (Request $request) {
+    // return response()->json($request['id']);
     $book = Book::Create([
-        'id' => $request['id'],
+        'bookId' => (int)$request['id'],
         'title' => $request['title'],
         'author' => $request['author'],
         'genre' => $request['genre'],
         'price' => $request['price'],
     ]);
     $sendingData = [
-        'id' => $book->id,
+        'id' => $book->bookId,
         'title' => $book->title,
         'author' => $book->author,
         'genre' => $book->genre,
@@ -38,7 +39,7 @@ Route::post('/books', function (Request $request) {
 });
 
 Route::put('/books/{id}', function (Request $request, $id) {
-    $book = Book::find($id);
+    $book = Book::where('bookId', $id)->first();
     if (!$book) {
         return response()->json(['message' => 'book with id: ' . $id . ' was not found'], 404);
     }
@@ -51,7 +52,7 @@ Route::put('/books/{id}', function (Request $request, $id) {
     $book->save();
 
     $sendingData = [
-        'id' => $book->id,
+        'id' => $book->bookId,
         'title' => $book->title,
         'author' => $book->author,
         'genre' => $book->genre,
@@ -61,12 +62,12 @@ Route::put('/books/{id}', function (Request $request, $id) {
 });
 
 Route::get('/books/{id}', function ($id) {
-    $book = Book::find($id);
+    $book = Book::where('bookId', $id)->first();
     if (!$book) {
         return response()->json(['message' => 'book with id: ' . $id . ' was not found'], 404);
     }
     $sendingData = [
-        'id' => $book->id,
+        'id' => $book->bookId,
         'title' => $book->title,
         'author' => $book->author,
         'genre' => $book->genre,
@@ -98,13 +99,15 @@ Route::get('/books', function (Request $request) {
 
     if ($sortField) {
         $booksQuery->orderBy($sortField, $sortingOrder ?? 'asc');
+    } else {
+        $booksQuery->orderBy('bookId', $sortingOrder ?? 'asc');
     }
 
     $books = $booksQuery->get();
     $sendingData = array();
     foreach ($books as $book) {
         $temp = [
-            'id' => $book->id,
+            'id' => $book->bookId,
             'title' => $book->title,
             'author' => $book->author,
             'genre' => $book->genre,
