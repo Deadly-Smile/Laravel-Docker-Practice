@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('points', function (Blueprint $table) {
-            $table->id();
-            $table->float('X');
-            $table->float('Y');
+        Schema::create('books', function (Blueprint $table) {
+            $table->integer('id')->unique();
+            $table->string('title');
+            $table->string('author');
+            $table->string('genre');
+            $table->float('price');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('points');
+        Schema::dropIfExists('books');
     }
 };

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Point;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,26 +19,101 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::PUT('/p1', function (Request $request) {
-    $p = Point::Create([
-        'X' => $request['x'],
-        'Y' => $request['y'],
+Route::post('/books', function (Request $request) {
+    $book = Book::Create([
+        'id' => $request['id'],
+        'title' => $request['title'],
+        'author' => $request['author'],
+        'genre' => $request['genre'],
+        'price' => $request['price'],
     ]);
-    return response()->json(['added' => ['x' => (int)$p->X, 'y' => (int)$p->Y]], 201);
+    $sendingData = [
+        'id' => $book->id,
+        'title' => $book->title,
+        'author' => $book->author,
+        'genre' => $book->genre,
+        'price' => (float)$book->price,
+    ];
+    return response()->json($sendingData, 201);
 });
 
-Route::GET('/p2', function (Request $request) {
-    $points = Point::all();
-    // dd($points)
-    $x = 0.00;
-    $y = 0.00;
-    foreach ($points as $point) {
-        $x += $point->X;
-        $y += $point->Y;
-    }
-    if (count($points) == 0) {
-        return response()->json(['avg' => ['x' => (int)0, 'y' => (int)0]], 200);
+Route::put('/books/{id}', function (Request $request, $id) {
+    $book = Book::find($id);
+    if (!$book) {
+        return response()->json(['message' => 'book with id: ' . $id . ' was not found'], 404);
     }
 
-    return response()->json(['avg' => ['x' => (int)round($x / count($points)), 'y' => (int)round($y / count($points))]], 200);
+    // return response()->json($request);
+    $book->title = $request['title'];
+    $book->author = $request['author'];
+    $book->genre = $request['genre'];
+    $book->price = $request['price'];
+    $book->save();
+
+    $sendingData = [
+        'id' => $book->id,
+        'title' => $book->title,
+        'author' => $book->author,
+        'genre' => $book->genre,
+        'price' => (float)$book->price,
+    ];
+    return response()->json($sendingData, 200);
+});
+
+Route::get('/books/{id}', function ($id) {
+    $book = Book::find($id);
+    if (!$book) {
+        return response()->json(['message' => 'book with id: ' . $id . ' was not found'], 404);
+    }
+    $sendingData = [
+        'id' => $book->id,
+        'title' => $book->title,
+        'author' => $book->author,
+        'genre' => $book->genre,
+        'price' => (float)$book->price,
+    ];
+    return response()->json($sendingData, 200);
+});
+
+Route::get('/books', function (Request $request) {
+    $title = $request->input('title');
+    $author = $request->input('author');
+    $genre = $request->input('genre');
+    $sortField = $request->input('sort');
+    $sortingOrder = $request->input('order');
+
+    $booksQuery = Book::query();
+
+    if ($title) {
+        $booksQuery->where('title', 'like', '%' . $title . '%');
+    }
+
+    if ($author) {
+        $booksQuery->where('author', 'like', '%' . $author . '%');
+    }
+
+    if ($genre) {
+        $booksQuery->where('genre', 'like', '%' . $genre . '%');
+    }
+
+    if ($sortField) {
+        $booksQuery->orderBy($sortField, $sortingOrder ?? 'asc');
+    }
+
+    $books = $booksQuery->get();
+    $sendingData = array();
+    foreach ($books as $book) {
+        $temp = [
+            'id' => $book->id,
+            'title' => $book->title,
+            'author' => $book->author,
+            'genre' => $book->genre,
+            'price' => (float)$book->price,
+        ];
+        array_push($sendingData, $temp);
+    }
+    // if (!$book) {
+    //     return response()->json(['message' => 'book with id: ' . $id . ' was not found'], 404);
+    // }
+    return response()->json(['books' => $sendingData], 200);
 });
