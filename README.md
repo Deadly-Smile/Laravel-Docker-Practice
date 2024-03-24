@@ -2,16 +2,22 @@
 
 ## How to setup
 
-### Run this command on bash
+### Run this command on bash(linux)
 
 ```bash
 make setup
 ```
-### If make commands don't work use separate commands
+### For windows
 ```bash
 docker-compose build --no-cache --force-rm
+```
+```
 docker-compose up -d
+```
+```
 docker exec laravel-docker bash -c "composer update"
+```
+```
 docker exec laravel-docker bash -c "php artisan migrate"
 ```
 ### If you have permission issue in linux system
