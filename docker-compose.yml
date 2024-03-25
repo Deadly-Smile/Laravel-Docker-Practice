@@ -10,17 +10,17 @@ services:
     ports:
       - 5000:80
   
-  mysql_db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_docker
-    ports:
-    - 3306:3306
+  # mysql_db:
+  #   image: mysql:latest
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: db_docker
+  #   ports:
+  #   - 3306:3306
   
-  phpmyadmin:
-    image: phpmyadmin:latest
-    ports:
-      - 9001:80
-    environment:
-      - PMA_ARBITRARY=1
+  # phpmyadmin:
+  #   image: phpmyadmin:latest
+  #   ports:
+  #     - 9001:80
+  #   environment:
+  #     - PMA_ARBITRARY=1

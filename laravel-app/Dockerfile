@@ -8,7 +8,6 @@ RUN a2enmod rewrite
 # Linux Library
 RUN apt-get update -y && apt-get install -y \
     libicu-dev \
-    libmariadb-dev \
     unzip zip \
     zlib1g-dev \
     libpng-dev \
